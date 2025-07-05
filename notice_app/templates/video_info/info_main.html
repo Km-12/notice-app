@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+<p>パテレの最新動画を5件表示します。</p>
+<form method="POST" action="{% url 'video_info:info_send' %}">
+    {% csrf_token %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>動画</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for video_id, title in resultVideoInfo.items %}
+            <tr>
+                <td data-label="#"> {{ forloop.counter }} </td>
+                <td data-label="動画">
+                    <a href="https://www.youtube.com/watch?v={{ video_id }}" target="_blank">
+                        {{ title }}
+                    </a>
+                </td>
+            </tr>
+            <input type="hidden" name="video_url" value="https://www.youtube.com/watch?v={{ video_id }}">
+            <input type="hidden" name="video_titles" value="{{ title }}">
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'video_info:index' %}" class="main-button">戻る</a>
+    <a href="{% url 'video_info:info_main' %}" class="main-button" onclick="return checkUpdate()">再表示</a>
+    <button type="submit" class="send-button" onclick="return checkSend()">送信</button>
+</form>
+{% endblock %}
